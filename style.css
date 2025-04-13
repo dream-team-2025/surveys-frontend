@@ -1,97 +1,108 @@
 body {
-    font-family: Arial, sans-serif;
-  }
-  
-  .container {
-    display: flex;
-    gap: 20px;
-    max-width: 1200px;
-    margin: auto;
-  }
-  
-  .main-content {
-    flex: 3;
-    background: white;
-    padding: 30px;
-    border-radius: 8px;
-  }
-  
-  .sidebar {
-    flex: 1;
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    max-height: fit-content;
-    position: sticky;
-    top: 20px;
-  }
-  
-  .input-field, textarea {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 8px;
-    background: #f1f5fd;
-    margin-bottom: 1rem;
-  }
-  
-  .button {
-    background: #016485;
-    color: white;
-    font-size: 14px;
-    padding: 10px 20px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .button:hover {
-    background: #014d6e;
-  }
-  
-  .top-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-  }
-  
-  .question-box {
-    padding: 16px;
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    margin-bottom: 20px;
-  }
-  
-  .bottom-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 30px;
-  }
-  
-  .navigation h3 {
-    font-weight: normal;
-    margin-bottom: 10px;
-    text-align: center
-   
-  }
-  
-  .navigation ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .navigation li {
-    padding: 8px 12px;
-    border-left: 4px solid transparent;
-    cursor: pointer;
-  }
-  
-  .navigation li:hover,
-  .navigation li.active {
-    background: #e0f2fe;
-    border-left: 4px solid #0e629a;
-    color: #0e629a;
-  }
-  
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  display: flex;
+  gap: 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.main-content {
+  flex: 3;
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+}
+
+.sidebar {
+  flex: 1;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-height: fit-content;
+  position: sticky;
+  top: 20px;
+}
+
+.input-field, textarea {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #f3f4f6;
+  margin-bottom: 1rem;
+}
+
+.button {
+  background: #016485;
+  color: white;
+  font-size: 14px;
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.button:hover {
+  background: #014d6e;
+}
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.question-box {
+  padding: 16px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.bottom-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+
+.navigation h3 {
+  font-weight: bold;
+  margin-bottom: 10px;
+  background: #e0f2fe;   /* Голубой фон */
+  color: #0e629a;       /* Бирюзовый текст */
+  border-radius: 8px;   /* Скруглённые углы */
+  padding: 10px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 16px;
+
+}
+
+.navigation ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.navigation li {
+  padding: 10px 12px;
+  border-left: 4px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #1f2937;
+  border-radius: 0 8px 8px 0;
+}
+
+.navigation li:hover,
+.navigation li.active {
+  background: #e0f2fe;
+  border-left: 4px solid #0e629a;
+  color: #0e629a;
+  font-weight: 500;
+}
