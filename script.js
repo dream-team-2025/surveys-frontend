@@ -8,18 +8,21 @@ const SurveyForm = () => {
 
   const sectionsRef = useRef({});
 
+  // Прокрутка к нужной секции
   const scrollToSection = (key) => {
+    // Убрали optional chaining, чтобы старая Babel не ругалась
     if (sectionsRef.current[key]) {
       sectionsRef.current[key].scrollIntoView({ behavior: "smooth" });
     }
   };
 
+  // Добавление вопроса (4 типа)
   const handleAddQuestion = (type) => {
     const newQuestion = {
       id: Date.now(),
       type,
       question: "Новый вопрос",
-      options: type === "radio" || type === "checkbox" ? ["Ответ 1", "Ответ 2"] : [],
+      options: (type === "radio" || type === "checkbox") ? ["Ответ 1", "Ответ 2"] : [],
       required: false,
       inputType: type === "text" ? "text" : undefined,
     };
@@ -27,10 +30,12 @@ const SurveyForm = () => {
     setShowTypeSelector(false);
   };
 
+  // Удаление вопроса целиком
   const handleDeleteQuestion = (id) => {
     setQuestions((prev) => prev.filter((q) => q.id !== id));
   };
 
+  // Добавление варианта ответа
   const handleAddOption = (qid) => {
     setQuestions((prev) =>
       prev.map((q) =>
@@ -39,6 +44,7 @@ const SurveyForm = () => {
     );
   };
 
+  // Удаление варианта ответа
   const handleDeleteOption = (qid, idx) => {
     setQuestions((prev) =>
       prev.map((q) =>
@@ -49,6 +55,7 @@ const SurveyForm = () => {
     );
   };
 
+  // Изменение текста варианта
   const handleChangeOption = (qid, idx, value) => {
     setQuestions((prev) =>
       prev.map((q) =>
@@ -62,12 +69,14 @@ const SurveyForm = () => {
     );
   };
 
-  const handleChangeQuestionType = (qid, type) => {
+  // Смена типа radio/checkbox
+  const handleChangeQuestionType = (qid, newType) => {
     setQuestions((prev) =>
-      prev.map((q) => (q.id === qid ? { ...q, type } : q))
+      prev.map((q) => (q.id === qid ? { ...q, type: newType } : q))
     );
   };
 
+  // Переключение «Обязательный вопрос»
   const handleToggleRequired = (qid) => {
     setQuestions((prev) =>
       prev.map((q) =>
@@ -76,10 +85,11 @@ const SurveyForm = () => {
     );
   };
 
-  const handleChangeInputType = (qid, type) => {
+  // Для «Свой вариант» (text/number)
+  const handleChangeInputType = (qid, newType) => {
     setQuestions((prev) =>
       prev.map((q) =>
-        q.id === qid ? { ...q, inputType: type } : q
+        q.id === qid ? { ...q, inputType: newType } : q
       )
     );
   };
@@ -90,12 +100,14 @@ const SurveyForm = () => {
 
   return (
     <div className="container">
+      {/* Левая часть: основное содержимое */}
       <div className="main-content">
         <div className="top-bar">
           <h2 className="text-xl font-bold">Создание опроса</h2>
           <button className="button" onClick={handlePublish}>Опубликовать</button>
         </div>
 
+        {/* Название */}
         <div ref={(el) => (sectionsRef.current["Название"] = el)}>
           <label className="font-medium">Название *</label>
           <input
@@ -107,6 +119,7 @@ const SurveyForm = () => {
           />
         </div>
 
+        {/* Описание */}
         <div ref={(el) => (sectionsRef.current["Описание"] = el)}>
           <label className="font-medium">Описание</label>
           <textarea
@@ -117,67 +130,87 @@ const SurveyForm = () => {
           ></textarea>
         </div>
 
+        {/* Даты */}
         <div ref={(el) => (sectionsRef.current["Доступен с"] = el)}>
           <label className="font-medium">Доступен с</label>
           <input type="date" className="input-field" />
         </div>
-
         <div ref={(el) => (sectionsRef.current["Доступен до"] = el)}>
           <label className="font-medium">Доступен до</label>
           <input type="date" className="input-field" />
         </div>
 
+        {/* Список вопросов */}
         {questions.map((q, i) => (
           <div
             key={q.id}
             className="question-box"
             ref={(el) => (sectionsRef.current[q.question] = el)}
           >
-            <div className="flex justify-between items-center mb-2">
-              <input
-                type="text"
-                className="input-field"
-                value={q.question}
-                onChange={(e) => {
-                  const updated = [...questions];
-                  updated[i].question = e.target.value;
-                  setQuestions(updated);
-                }}
-              />
+            {/* Шапка вопроса */}
+            <div className="question-header">
+              <div className="question-title">
+                <input
+                  type="text"
+                  className="w-full bg-transparent border-none outline-none font-medium"
+                  value={q.question}
+                  onChange={(e) => {
+                    const updated = [...questions];
+                    updated[i].question = e.target.value;
+                    setQuestions(updated);
+                  }}
+                />
+              </div>
+
               {(q.type === "radio" || q.type === "checkbox") && (
-                <select
-                  className="input-field w-40"
-                  value={q.type}
-                  onChange={(e) => handleChangeQuestionType(q.id, e.target.value)}
-                >
-                  <option value="radio">Один из списка</option>
-                  <option value="checkbox">Несколько из списка</option>
-                </select>
+                <div className="question-type">
+                  <select
+                    value={q.type}
+                    onChange={(e) => handleChangeQuestionType(q.id, e.target.value)}
+                  >
+                    <option value="radio">Один из списка</option>
+                    <option value="checkbox">Несколько из списка</option>
+                  </select>
+                </div>
               )}
             </div>
 
-            {(q.type === "radio" || q.type === "checkbox") &&
-              q.options.map((opt, idx) => (
-                <div key={idx} className="flex items-center gap-2 mb-2">
-                  <input type={q.type} disabled />
-                  <input
-                    type="text"
-                    className="flex-1 input-field"
-                    value={opt}
-                    onChange={(e) => handleChangeOption(q.id, idx, e.target.value)}
-                  />
-                  <button onClick={() => handleDeleteOption(q.id, idx)}>🗑</button>
-                </div>
-              ))}
-
+            {/* radio / checkbox */}
             {(q.type === "radio" || q.type === "checkbox") && (
-              <button className="text-blue-600 mb-2" onClick={() => handleAddOption(q.id)}>
-                + Добавить вариант ответа
-              </button>
+              <div>
+                <div className="options-list">
+                  {q.options.map((opt, idx) => (
+                    <div key={idx} className="option-row">
+                      <div className="option-left">
+                        <input type={q.type} disabled />
+                        <input
+                          type="text"
+                          className="input-field"
+                          style={{ width: "200px" }}
+                          value={opt}
+                          onChange={(e) => handleChangeOption(q.id, idx, e.target.value)}
+                        />
+                      </div>
+                      <div className="option-actions">
+                        <span className="icon-btn" onClick={() => handleAddOption(q.id)}>+</span>
+                        <span className="icon-btn" onClick={() => handleDeleteOption(q.id, idx)}>
+                          🗑
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* «Добавить вариант» ссылкой */}
+                <div className="add-option" onClick={() => handleAddOption(q.id)}>
+                  Добавить вариант
+                </div>
+              </div>
             )}
 
+            {/* text */}
             {q.type === "text" && (
-              <div className="mb-4">
+              <div className="mb-4 mt-2">
                 <label className="mr-2">Тип ввода:</label>
                 <select
                   className="input-field w-40"
@@ -190,6 +223,7 @@ const SurveyForm = () => {
               </div>
             )}
 
+            {/* nps */}
             {q.type === "nps" && (
               <div className="flex gap-2 mt-2">
                 {[...Array(10)].map((_, idx) => (
@@ -200,23 +234,27 @@ const SurveyForm = () => {
               </div>
             )}
 
+            {/* Низ вопроса */}
             <div className="flex justify-between mt-4 items-center">
-              <label className="flex items-center">
+              <label className="flex items-center gap-2">
+                <span>Обязательный вопрос</span>
                 <input
                   type="checkbox"
-                  className="mr-2"
                   checked={q.required}
                   onChange={() => handleToggleRequired(q.id)}
                 />
-                Обязательный вопрос
               </label>
-              <button className="text-red-500" onClick={() => handleDeleteQuestion(q.id)}>
+              <button
+                className="text-red-500"
+                onClick={() => handleDeleteQuestion(q.id)}
+              >
                 🗑 Удалить вопрос
               </button>
             </div>
           </div>
         ))}
 
+        {/* Блок снизу: «Добавить вопрос» / «Опубликовать» */}
         <div className="bottom-buttons">
           {showTypeSelector ? (
             <div className="flex gap-4 flex-wrap">
@@ -226,13 +264,17 @@ const SurveyForm = () => {
               <button className="button" onClick={() => handleAddQuestion("nps")}>Шкала NPS</button>
             </div>
           ) : (
-            <button className="button" onClick={() => setShowTypeSelector(true)}>+ Добавить вопрос</button>
+            <button className="button" onClick={() => setShowTypeSelector(true)}>
+              + Добавить вопрос
+            </button>
           )}
-          <button className="button" onClick={handlePublish}>Опубликовать</button>
+          <button className="button" onClick={handlePublish}>
+            Опубликовать
+          </button>
         </div>
       </div>
 
-      {/* Навигация */}
+      {/* Правая часть: навигация */}
       <div className="sidebar">
         <div className="navigation">
           <h3 className="text-lg font-bold mb-2">НАВИГАЦИЯ</h3>
@@ -242,7 +284,10 @@ const SurveyForm = () => {
             <li onClick={() => scrollToSection("Доступен с")}>Доступен с</li>
             <li onClick={() => scrollToSection("Доступен до")}>Доступен до</li>
             {questions.map((q) => (
-              <li key={q.id} onClick={() => scrollToSection(q.question)}>
+              <li
+                key={q.id}
+                onClick={() => scrollToSection(q.question)}
+              >
                 {q.question}
               </li>
             ))}
